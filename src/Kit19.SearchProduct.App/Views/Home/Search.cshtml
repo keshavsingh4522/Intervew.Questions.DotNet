@@ -1,0 +1,120 @@
+﻿@model ProductSearchViewModel
+
+@{
+    ViewData["Title"] = "Search";
+}
+
+<h2>Search Products</h2>
+
+<div class="container">
+    <form asp-action="Search" method="post" class="mb-3">
+        <!-- Use Bootstrap grid layout -->
+        <div class="form-row">
+            <div class="form-group col-md-6">
+                <label for="ProductName">Product Name:</label>
+                <input type="text" class="form-control" asp-for="ProductName" id="ProductName" />
+            </div>
+            <div class="form-group col-md-6">
+                <label for="Size">Size:</label>
+                <input type="text" class="form-control" asp-for="Size" id="Size" />
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group col-md-6">
+                <label for="Price">Price:</label>
+                <input type="number" class="form-control" asp-for="Price" id="Price" />
+            </div>
+            <div class="form-group col-md-6">
+                <label for="MfgDate">Manufacturing Date:</label>
+                <input type="date" class="form-control" asp-for="MfgDate" id="MfgDate" />
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group col-md-6">
+                <label for="Category">Category:</label>
+                <input type="text" class="form-control" asp-for="Category" id="Category" />
+            </div>
+            <div class="form-group col-md-6">
+                <label for="Conjunction">Conjunction:</label>
+                <select class="form-control" asp-for="Conjunction" id="Conjunction" disabled>
+                    <option value="AND">AND</option>
+                    <option value="OR">OR</option>
+                </select>
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group col-md-12">
+                <button type="submit" class="btn btn-primary" id="searchButton" disabled>Search</button>
+                <button type="button" class="btn btn-secondary" onclick="resetForm()">Clear</button>
+            </div>
+        </div>
+    </form>
+
+    <!-- Display search results in a Bootstrap table if any -->
+    @if (Model.SearchResults.Any())
+    {
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Product Name</th>
+                    <th>Size</th>
+                    <th>Price</th>
+                    <th>Manufacturing Date</th>
+                    <th>Category</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var product in Model.SearchResults)
+                {
+                    <tr>
+                        <td>@product.ProductName</td>
+                        <td>@product.Size</td>
+                        <td>@product.Price</td>
+                        <td>@(product.MfgDate.HasValue ? product.MfgDate.Value.ToShortDateString() : "")</td>
+                        <td>@product.Category</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+</div>
+
+<script>
+    $(document).ready(function () {
+        function updateControlsState() {
+            console.log('updateControlsState called');
+            var filledFields = 0;
+            // Check each input field to see if it has a value
+            $('input[type="text"], input[type="number"], input[type="date"]').each(function () {
+                if ($(this).val().trim() !== '') {
+                    filledFields++;
+                }
+            });
+
+            // Enable the search button if at least one field is filled
+            $('#searchButton').prop('disabled', filledFields === 0);
+
+            // Enable the conjunction select if more than one field is filled
+            $('#Conjunction').prop('disabled', filledFields <= 1);
+        }
+
+        // Attach the updateControlsState function to the input fields' events
+        $('input[type="text"], input[type="number"], input[type="date"]').on('input', updateControlsState);
+
+        // Reset form and clear search results
+        function resetForm() {
+            // Reset the form fields
+            $('form')[0].reset();
+            // Clear any search results from the table
+            $('table tbody').empty();
+            // Reset the state of the controls
+            updateControlsState();
+        }
+
+        // Attach the resetForm function to the clear button's click event
+        $('.btn-secondary').on('click', resetForm);
+
+        // Initialize the state of the controls on page load
+        updateControlsState();
+    });
+</script>
