@@ -87,7 +87,25 @@ function fetchGitHubUser(username) {
 }
 
 // Example: Fetching GitHub user details
-fetchGitHubUser('keshavsingh4522');
+// fetchGitHubUser('keshavsingh4522');
+
+// Function to extract username from the URL path
+function getUsernameFromPath() {
+    const pathSegments = window.location.pathname.split('/').filter(Boolean);
+    // Assuming that the username is the first segment after the domain
+    return pathSegments[0] || null;
+}
+
+// Fetch GitHub user details using the username from the URL path
+const username = getUsernameFromPath();
+if (username) {
+    fetchGitHubUser(username);
+} else {
+    console.error('No username found in the URL path');
+    // Optionally display an error message on the card
+    document.getElementById('name').textContent = 'No username provided in URL';
+    // Hide or clear other fields
+}
 </script>
 
 </body>
