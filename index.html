@@ -122,7 +122,7 @@ if (username) {
 
 // HTML to IMAGE
 document.getElementById('convertBtn').addEventListener('click', function() {
-    html2canvas(document.getElementById('githubCard')).then(canvas => {
+    html2canvas(document.getElementById('githubCard'), { useCORS: true }).then(canvas => {
         // Create an image element
         const img = document.createElement('img');
         // Set the image source to the canvas data URL
