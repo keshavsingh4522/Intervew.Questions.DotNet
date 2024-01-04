@@ -69,6 +69,10 @@
     </div>
 </div>
 
+<button id="convertBtn">Convert to Image</button>
+<div id="imageOutput"></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.3.2/html2canvas.min.js"></script>
 <script>
 function fetchGitHubUser(username) {
     fetch(`https://api.github.com/users/${username}`)
@@ -114,6 +118,31 @@ if (username) {
     // Optionally display an error message on the card
     document.getElementById('name').textContent = 'No username provided in URL';
     // Hide or clear other fields
+}
+
+// HTML to IMAGE
+document.getElementById('convertBtn').addEventListener('click', function() {
+    html2canvas(document.getElementById('githubCard')).then(canvas => {
+        // Create an image element
+        const img = document.createElement('img');
+        // Set the image source to the canvas data URL
+        img.src = canvas.toDataURL('image/png');
+        // Clear the output div and append the new image
+        const outputDiv = document.getElementById('imageOutput');
+        outputDiv.innerHTML = '';
+        outputDiv.appendChild(img);
+        // Optionally, you can also download the image directly
+        // downloadImage(img.src, 'githubCard.png');
+    });
+});
+
+function downloadImage(dataUrl, filename) {
+    const a = document.createElement('a');
+    a.href = dataUrl;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
 }
 </script>
 
