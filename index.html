@@ -96,8 +96,17 @@ function getUsernameFromPath() {
     return pathSegments[0] || null;
 }
 
+function getUsernameFromHash() {
+    return window.location.hash.substring(1); // Remove the '#' symbol
+}
+    
+function getUsernameFromQueryString() {
+    const queryParams = new URLSearchParams(window.location.search);
+    return queryParams.get('user');
+}
+
 // Fetch GitHub user details using the username from the URL path
-const username = getUsernameFromPath();
+const username = getUsernameFromHash();
 if (username) {
     fetchGitHubUser(username);
 } else {
