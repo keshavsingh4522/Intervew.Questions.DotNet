@@ -106,7 +106,7 @@ function getUsernameFromQueryString() {
 }
 
 // Fetch GitHub user details using the username from the URL path
-const username = getUsernameFromHash();
+const username = getUsernameFromQueryString();
 if (username) {
     fetchGitHubUser(username);
 } else {
